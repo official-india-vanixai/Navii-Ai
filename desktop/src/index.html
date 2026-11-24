@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com; connect-src 'self' http://127.0.0.1:8000 http://localhost:8000 https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://*.firebaseio.com https://*.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; frame-src https://*.firebaseapp.com;">
+  <title>N.A.V.I.I - Neural Assistant for Virtual Intelligence & Interaction</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/styles/main.css">
+  <link rel="stylesheet" href="assets/styles/sidebar.css">
+  <link rel="stylesheet" href="assets/styles/chat.css">
+  <link rel="stylesheet" href="assets/styles/workspaces.css">
+  <link rel="stylesheet" href="assets/styles/modal.css">
+</head>
+<body>
+  <div id="app-container">
+    <!-- Frameless Window Titlebar -->
+    <header class="titlebar">
+      <div class="titlebar-brand">
+        <div class="logo-orb-small"></div>
+        <span class="brand-badge">N.A.V.I.I</span>
+        <span class="version-tag">MVP v1.0</span>
+      </div>
+
+      <div class="titlebar-status">
+        <span class="status-indicator"></span>
+        <span>Cloud Gateway: Ready</span>
+      </div>
+
+      <div class="titlebar-controls">
+        <button class="win-btn" id="win-min" title="Minimize">
+          <svg width="10" height="10" viewBox="0 0 10 1"><rect width="10" height="1" fill="currentColor"/></svg>
+        </button>
+        <button class="win-btn" id="win-max" title="Maximize">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor"><rect x="0.5" y="0.5" width="9" height="9"/></svg>
+        </button>
+        <button class="win-btn close-btn" id="win-close" title="Close">
+          <svg width="10" height="10" viewBox="0 0 10 10" stroke="currentColor"><path d="M0 0L10 10M10 0L0 10"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Workspace Layout -->
+    <div class="workspace">
+      <!-- Left Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <!-- Brand Header with Collapse Toggle -->
+        <div class="sidebar-header">
+          <div class="brand-wrapper">
+            <div class="logo-orb-small"></div>
+            <div class="brand-text-container">
+              <span class="brand-title">N.A.V.I.I</span>
+              <span class="brand-tagline">Intelligence at Your Fingertips.</span>
+            </div>
+          </div>
+          <button class="sidebar-collapse-btn" id="sidebar-collapse-btn" title="Toggle Sidebar (Ctrl+B)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          </button>
+        </div>
+
+        <!-- New Chat Button -->
+        <div class="new-chat-wrapper">
+          <button class="btn-new-chat" id="btn-new-chat">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>New Conversation</span>
+          </button>
+        </div>
+
+        <!-- Assistants Navigation -->
+        <div class="sidebar-section-title">Cognitive Modules</div>
+        <ul class="nav-assistants">
+          <li class="nav-item active" data-mode="chat" title="AI Chat Intelligence">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span>AI Chat</span>
+          </li>
+          <li class="nav-item" data-mode="voice" title="Voice Assistant & Dictation">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+            <span>Voice Assistant</span>
+          </li>
+          <li class="nav-item" data-mode="writing" title="AI Writing & Synthesis Studio">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+            <span>AI Writing</span>
+          </li>
+          <li class="nav-item" data-mode="coding" title="Coding & Debug Studio">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            <span>Coding Assistant</span>
+          </li>
+          <li class="nav-item" data-mode="files" title="Document & File Assistant">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            <span>File Assistant</span>
+          </li>
+          <li class="nav-item" data-mode="search" title="Live Neural Web Search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <span>Web Search</span>
+          </li>
+        </ul>
+
+        <!-- History Sessions -->
+        <div class="sidebar-section-title">Recent Sessions</div>
+        <div class="history-search-box">
+          <input type="text" class="search-input" id="search-history" placeholder="Filter conversations...">
+        </div>
+        <div class="history-container">
+          <ul class="history-list" id="history-list">
+            <!-- Populated dynamically by ui.js -->
+          </ul>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="sidebar-footer">
+          <div class="user-badge" id="btn-user-profile" title="Account & Identity">
+            <div class="user-avatar">OP</div>
+            <div class="user-details">
+              <span class="user-name">Operator</span>
+              <span class="user-status"><span class="status-indicator"></span> Cloud Active</span>
+            </div>
+          </div>
+          <button class="sidebar-settings-btn" id="btn-open-settings" title="Settings (Ctrl+,)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Workspaces Host -->
+      <main class="main-view">
+        <!-- Persistent Top Header -->
+        <div class="chat-header">
+          <div class="chat-header-info">
+            <h2 class="current-mode-title" id="current-mode-heading">
+              <span>💬</span> AI Chat Intelligence
+            </h2>
+            <div class="model-selector-wrapper" id="model-selector-wrapper">
+              <button class="model-dropdown-trigger" id="model-dropdown-trigger" title="Select AI Model">
+                <span class="status-indicator active" id="model-status-dot"></span>
+                <span class="model-trigger-label" id="model-trigger-label">🧠 Smart Mode</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="model-dropdown-menu" id="model-dropdown-menu">
+                <div class="model-dropdown-header">
+                  <span>OpenRouter AI Gateway</span>
+                  <span class="quota-badge" id="quota-display-badge">200 / day</span>
+                </div>
+                <div class="model-dropdown-section-title">Intelligent Routing</div>
+                <div class="model-option active" data-model="smart">
+                  <div class="model-option-top">
+                    <span class="model-option-name">🧠 Smart Mode</span>
+                    <span class="model-badge-tag auto">AUTO</span>
+                  </div>
+                  <div class="model-option-desc">Auto-routes tasks to optimal free model</div>
+                </div>
+                <div class="model-option" data-model="multi">
+                  <div class="model-option-top">
+                    <span class="model-option-name">🌐 Multi-AI Mode</span>
+                    <span class="model-badge-tag multi">DUAL</span>
+                  </div>
+                  <div class="model-option-desc">Parallel consensus from Gemma 4 + Nemotron Ultra</div>
+                </div>
+                <div class="model-dropdown-divider"></div>
+                <div class="model-dropdown-section-title">Verified Free Models</div>
+                <div class="model-option" data-model="google/gemma-4-26b-a4b-it:free">
+                  <div class="model-option-top">
+                    <span class="model-option-name">💎 Google Gemma 4 26B</span>
+                    <span class="model-badge-tag free">FREE</span>
+                  </div>
+                  <div class="model-option-desc">Coding, Logic & Technical Reasoning</div>
+                </div>
+                <div class="model-option" data-model="nvidia/nemotron-3-ultra-550b-a55b:free">
+                  <div class="model-option-top">
+                    <span class="model-option-name">⚡ NVIDIA Nemotron 3 Ultra 550B</span>
+                    <span class="model-badge-tag free">FREE</span>
+                  </div>
+                  <div class="model-option-desc">Deep Reasoning & Architecture</div>
+                </div>
+                <div class="model-option" data-model="particle-ai/particle-1:free">
+                  <div class="model-option-top">
+                    <span class="model-option-name">⚛️ Particle AI Particle-1</span>
+                    <span class="model-badge-tag free">FREE</span>
+                  </div>
+                  <div class="model-option-desc">Concise General Intelligence & QA</div>
+                </div>
+                <div class="model-option" data-model="nvidia/nemotron-3.5-super-vl:free">
+                  <div class="model-option-top">
+                    <span class="model-option-name">👁️ NVIDIA Nemotron 3.5 Super VL</span>
+                    <span class="model-badge-tag free">FREE</span>
+                  </div>
+                  <div class="model-option-desc">Visual Reasoning & Document Structure</div>
+                </div>
+                <div class="model-option" data-model="baidu/ernie-5.5-flash-preview:free">
+                  <div class="model-option-top">
+                    <span class="model-option-name">🏮 Baidu ERNIE 5.5 Flash</span>
+                    <span class="model-badge-tag free">FREE</span>
+                  </div>
+                  <div class="model-option-desc">Fast Drafting & Executive Briefings</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-header-actions">
+            <button class="header-action-btn" id="theme-toggle-btn" title="Toggle Theme">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+              <span>Theme</span>
+            </button>
+            <button class="header-action-btn" id="btn-clear-chat" title="Clear Conversation">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path></svg>
+              <span>Clear</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- WORKSPACE 1: AI CHAT (Default) -->
+        <div class="workspace-view active" id="workspace-chat" style="padding: 0; display: flex; flex-direction: column;">
+          <div class="chat-container" id="chat-container">
+            <!-- Empty State / Welcome Screen -->
+            <div class="welcome-container" id="welcome-container">
+              <div class="neural-orb-wrapper">
+                <div class="neural-ring ring-outer"></div>
+                <div class="neural-ring ring-middle"></div>
+                <div class="neural-ring ring-core"></div>
+              </div>
+
+              <h1 class="welcome-title">N.A.V.I.I</h1>
+              <p class="welcome-subtitle">Neural Assistant for Virtual Intelligence & Interaction</p>
+              <div class="welcome-tagline">Intelligence at Your Fingertips.</div>
+
+              <!-- Suggestion Prompt Cards -->
+              <div class="prompt-grid">
+                <div class="prompt-card" data-prompt="Draft an executive email announcing our cloud platform launch">
+                  <span class="prompt-icon">✉️</span>
+                  <div class="prompt-card-content">
+                    <h4>Executive Email</h4>
+                    <p>Draft professional stakeholder communication</p>
+                  </div>
+                </div>
+
+                <div class="prompt-card" data-prompt="Build an asynchronous Python FastAPI client with connection pooling">
+                  <span class="prompt-icon">💻</span>
+                  <div class="prompt-card-content">
+                    <h4>Async FastAPI Service</h4>
+                    <p>Generate production Python code & architecture</p>
+                  </div>
+                </div>
+
+                <div class="prompt-card" data-prompt="Summarize the core security benefits of Electron contextIsolation">
+                  <span class="prompt-icon">🔒</span>
+                  <div class="prompt-card-content">
+                    <h4>Architecture Breakdown</h4>
+                    <p>Analyze sandboxing and IPC boundary isolation</p>
+                  </div>
+                </div>
+
+                <div class="prompt-card" data-prompt="Search recent breakthroughs in multi-agent autonomous frameworks">
+                  <span class="prompt-icon">🌐</span>
+                  <div class="prompt-card-content">
+                    <h4>Neural Web Search</h4>
+                    <p>Synthesize live external intelligence & citations</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dynamic Message Bubbles -->
+            <div class="message-list" id="message-list"></div>
+          </div>
+
+          <!-- Floating Prompt Dock -->
+          <div class="input-dock">
+            <div class="input-pill">
+              <div class="input-top-row">
+                <textarea class="chat-input" id="chat-textarea" placeholder="Message Navii, or ask to write code, synthesize documents..." rows="1"></textarea>
+              </div>
+
+              <div class="input-bottom-row">
+                <div class="input-tools">
+                  <button class="tool-btn" id="btn-attach" title="Attach Document (PDF, TXT, DOCX)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                  </button>
+                  <div class="search-toggle-pill" id="search-toggle" title="Toggle Live Web Search">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <span>Web Search</span>
+                  </div>
+                </div>
+
+                <div class="input-actions">
+                  <button class="btn-mic" id="btn-voice-input" title="Voice Dictation">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                  </button>
+                  <button class="btn-send" id="btn-send-message" title="Send Message (Enter)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WORKSPACE 2: VOICE ASSISTANT -->
+        <div class="workspace-view" id="workspace-voice">
+          <div class="workspace-header">
+            <div class="workspace-title-row">
+              <h2 class="workspace-title"><span>🎙️</span> Voice Intelligence & Speech Engine</h2>
+              <span class="model-badge">Whisper STT • Neural TTS</span>
+            </div>
+            <p class="workspace-desc">Real-time voice dictation, conversational speech synthesis, and customizable voice personas.</p>
+          </div>
+
+          <div class="voice-stage">
+            <div class="voice-orb-container">
+              <div class="voice-orb" id="voice-stage-orb" title="Click to Speak">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+              </div>
+            </div>
+
+            <div class="waveform-bars">
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+            </div>
+
+            <div class="voice-status-label" id="voice-status-text">Voice Engine: Standby</div>
+
+            <div class="voice-transcript-card">
+              <div class="voice-transcript-title">Real-Time Transcription & Synthesis</div>
+              <div class="voice-transcript-text" id="voice-transcript-text">
+                Click the neural voice orb or "Start Listening" below to dictate with Whisper STT.
+              </div>
+            </div>
+
+            <div class="voice-controls-strip">
+              <button class="btn-primary" id="btn-toggle-listening">Start Listening</button>
+              <select class="search-input" id="voice-persona-select" style="max-width: 140px;">
+                <option value="Alloy">Alloy (Balanced)</option>
+                <option value="Echo">Echo (Warm)</option>
+                <option value="Fable">Fable (Expressive)</option>
+                <option value="Onyx">Onyx (Deep)</option>
+                <option value="Nova">Nova (Energetic)</option>
+                <option value="Shimmer">Shimmer (Clear)</option>
+              </select>
+              <button class="btn-secondary" id="btn-test-voice">Test Voice Persona</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- WORKSPACE 3: AI WRITING STUDIO -->
+        <div class="workspace-view" id="workspace-writing">
+          <div class="workspace-header">
+            <div class="workspace-title-row">
+              <h2 class="workspace-title"><span>✍️</span> AI Writing & Synthesis Studio</h2>
+              <button class="btn-primary" id="btn-generate-writing">Synthesize Content</button>
+            </div>
+            <p class="workspace-desc">Executive drafting, grammatical refinement, tone modulation, and structured content synthesis.</p>
+          </div>
+
+          <!-- Template Selection Row -->
+          <div class="writing-templates-row">
+            <div class="template-chip active" data-template="email">✉️ Executive Email</div>
+            <div class="template-chip" data-template="content">📝 Content Generation</div>
+            <div class="template-chip" data-template="grammar">✨ Grammar Polish</div>
+            <div class="template-chip" data-template="rewrite">🔄 Tone Rewriter</div>
+            <div class="template-chip" data-template="summary">📑 Executive Summarizer</div>
+          </div>
+
+          <!-- Dual Editor Pane -->
+          <div class="writing-grid">
+            <div class="writing-pane">
+              <div class="writing-pane-header">
+                <span class="writing-pane-title">Source Input / Instructions</span>
+              </div>
+              <textarea class="writing-textarea" id="writing-input-area" placeholder="Enter notes, outline, or text to polish...">Draft an executive briefing email regarding our Q3 AI assistant launch to board members.</textarea>
+              <div class="writing-pane-footer">
+                <span class="stat-badge" id="writing-word-count">13 words</span>
+                <span class="stat-badge" id="writing-char-count">88 chars</span>
+              </div>
+            </div>
+
+            <div class="writing-pane">
+              <div class="writing-pane-header">
+                <span class="writing-pane-title">Neural Synthesis Preview</span>
+                <button class="btn-secondary" id="btn-copy-writing" style="padding: 4px 10px; font-size: 11px;">Copy Text</button>
+              </div>
+              <div class="writing-output" id="writing-output-area">
+                Click <strong>"Synthesize Content"</strong> above to generate executive drafts with structured reasoning.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WORKSPACE 4: CODING ASSISTANT -->
+        <div class="workspace-view" id="workspace-coding">
+          <div class="workspace-header">
+            <div class="workspace-title-row">
+              <h2 class="workspace-title"><span>💻</span> Code Studio & Architecture Assistant</h2>
+              <button class="btn-primary" id="btn-run-code-action">Generate Code</button>
+            </div>
+            <p class="workspace-desc">Multi-language code generation, architectural explanation, bug localization, and async optimization.</p>
+          </div>
+
+          <div class="coding-toolbar">
+            <div class="lang-selector-group">
+              <button class="lang-chip active" data-lang="python">Python</button>
+              <button class="lang-chip" data-lang="javascript">JavaScript</button>
+              <button class="lang-chip" data-lang="typescript">TypeScript</button>
+              <button class="lang-chip" data-lang="rust">Rust</button>
+              <button class="lang-chip" data-lang="go">Go</button>
+              <button class="lang-chip" data-lang="sql">PostgreSQL</button>
+            </div>
+            <input type="text" class="search-input" id="code-prompt-input" placeholder="Prompt (e.g. Build an async FastAPI client with connection pooling)..." style="max-width: 380px;">
+          </div>
+
+          <div class="code-editor-box">
+            <div class="code-editor-topbar">
+              <span style="font-size: 12px; font-weight: 700; color: var(--accent-cyan);">client_service.py</span>
+              <button class="code-copy-btn" id="btn-copy-code-studio">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <span>Copy Code</span>
+              </button>
+            </div>
+            <div class="code-body">
+              <div class="code-line-numbers">
+                1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16
+              </div>
+              <pre class="code-pre-content"><code id="code-studio-content"># Production-grade Async Python Client
+import httpx
+import asyncio
+from typing import Dict, Any
+
+class NaviiClient:
+    def __init__(self, base_url: str = "https://navii-backend.onrender.com"):
+        self.base_url = base_url
+        self.client = httpx.AsyncClient(timeout=30.0)
+
+    async def send_prompt(self, prompt: str) -> Dict[str, Any]:
+        response = await self.client.post(
+            f"{self.base_url}/api/v1/chat/completions",
+            json={"prompt": prompt, "model": "gpt-4o"}
+        )
+        response.raise_for_status()
+        return response.json()</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- WORKSPACE 5: FILE ASSISTANT -->
+        <div class="workspace-view" id="workspace-files">
+          <div class="workspace-header">
+            <div class="workspace-title-row">
+              <h2 class="workspace-title"><span>📁</span> Document & File Assistant</h2>
+              <button class="btn-primary" id="btn-summarize-file">Summarize Active File</button>
+            </div>
+            <p class="workspace-desc">Upload PDF, DOCX, TXT files to extract intelligence, synthesize sections, and answer questions.</p>
+          </div>
+
+          <div class="file-dropzone" id="file-dropzone">
+            <div class="dropzone-icon">📄</div>
+            <div class="dropzone-title">Drop your documents here, or click to browse</div>
+            <div class="dropzone-sub">Supported formats: PDF, DOCX, TXT, CSV, JSON (Up to 25MB)</div>
+          </div>
+
+          <div class="file-queue-title">Uploaded Documents Queue</div>
+          <div class="file-queue-list" id="file-queue-list"></div>
+        </div>
+
+        <!-- WORKSPACE 6: WEB SEARCH -->
+        <div class="workspace-view" id="workspace-search">
+          <div class="workspace-header">
+            <div class="workspace-title-row">
+              <h2 class="workspace-title"><span>🌐</span> Live Neural Web Search</h2>
+              <span class="model-badge">Tavily Engine • Real-Time Web</span>
+            </div>
+            <p class="workspace-desc">Connect to the live internet with real-time external search, domain verification, and citation synthesis.</p>
+          </div>
+
+          <div class="search-bar-box">
+            <input type="text" class="search-field" id="search-query-field" placeholder="Search the web (e.g. Latest breakthroughs in multi-agent autonomous frameworks)...">
+            <button class="btn-primary" id="btn-execute-search">Execute Search</button>
+          </div>
+
+          <div class="synthesis-card">
+            <div class="synthesis-header">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+              <span>AI Search Synthesis</span>
+            </div>
+            <div class="synthesis-text" id="search-synthesis-text">
+              Synthesis shows high alignment with modern cloud-powered desktop assistant architectures. Live search citations will stream directly from the remote FastAPI backend.
+            </div>
+          </div>
+
+          <div class="file-queue-title">External Source Citations</div>
+          <div class="results-grid" id="search-results-grid">
+            <div class="result-card">
+              <div class="result-domain">🌐 deepmind.google</div>
+              <h4 class="result-title"><a href="#">DeepMind Gemini 1.5 Architecture & Multi-Modal Long Context</a></h4>
+              <p class="result-snippet">Gemini 1.5 achieves breakthrough performance across multi-modal reasoning, native 1M+ token processing, and efficient inference paradigms.</p>
+            </div>
+            <div class="result-card">
+              <div class="result-domain">🌐 fastapi.tiangolo.com</div>
+              <h4 class="result-title"><a href="#">Building Modern Desktop Applications with Electron and FastAPI</a></h4>
+              <p class="result-snippet">Decoupling heavy AI computation to remote cloud FastAPI services guarantees low client memory footprint and impenetrable security boundaries.</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- MODAL 1: SETTINGS MODAL (TABBED) -->
+    <div class="modal-backdrop" id="settings-modal">
+      <div class="modal-window">
+        <div class="modal-header">
+          <div class="modal-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            <span>N.A.V.I.I Neural Preferences</span>
+          </div>
+          <button class="modal-close-btn" id="close-settings-modal">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <!-- Settings Tabs -->
+        <div class="modal-tabs">
+          <button class="modal-tab-btn active" data-tab="appearance">Appearance</button>
+          <button class="modal-tab-btn" data-tab="ai-engine">AI Engine</button>
+          <button class="modal-tab-btn" data-tab="voice">Voice & Audio</button>
+          <button class="modal-tab-btn" data-tab="cloud">Cloud Gateway</button>
+        </div>
+
+        <div class="modal-body">
+          <!-- TAB 1: APPEARANCE -->
+          <div class="modal-tab-content active" id="tab-content-appearance">
+            <div class="settings-section">
+              <div class="settings-section-title">Theme Interface</div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">Visual Style</span>
+                  <span class="setting-desc">Switch between cyber dark and daylight workspace</span>
+                </div>
+                <div class="setting-control theme-selector-group">
+                  <button class="theme-pill-btn active" data-theme-val="dark">Cyber Dark</button>
+                  <button class="theme-pill-btn" data-theme-val="light">Nebula Light</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <div class="settings-section-title">Audio Feedback</div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">UI Sound Effects</span>
+                  <span class="setting-desc">Synthesize subtle cybernetic audio cues on interaction</span>
+                </div>
+                <div class="setting-control">
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="setting-sound-toggle" checked>
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: AI ENGINE -->
+          <div class="modal-tab-content" id="tab-content-ai-engine">
+            <div class="settings-section">
+              <div class="settings-section-title">Model Architecture</div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">Primary AI Model</span>
+                  <span class="setting-desc">Flagship OpenAI cloud reasoning engine</span>
+                </div>
+                <div class="setting-control">
+                  <select id="setting-model-select">
+                    <optgroup label="Orchestration Modes">
+                      <option value="smart" selected>🧠 Smart Mode (Auto-Routing Free Models)</option>
+                      <option value="multi">🌐 Multi-AI Mode (Dual Consensus)</option>
+                    </optgroup>
+                    <optgroup label="Verified Free Models (OpenRouter Only)">
+                      <option value="google/gemma-4-26b-a4b-it:free">💎 Google Gemma 4 26B (Coding & Logic)</option>
+                      <option value="nvidia/nemotron-3-ultra-550b-a55b:free">⚡ NVIDIA Nemotron 3 Ultra 550B (Deep Reasoning)</option>
+                      <option value="particle-ai/particle-1:free">⚛️ Particle AI Particle-1 (General Intelligence)</option>
+                      <option value="nvidia/nemotron-3.5-super-vl:free">👁️ NVIDIA Nemotron 3.5 Super VL (Vision & Docs)</option>
+                      <option value="baidu/ernie-5.5-flash-preview:free">🏮 Baidu ERNIE 5.5 Flash (Drafting & Speed)</option>
+                    </optgroup>
+                  </select>
+                </div>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">Temperature (Creativity)</span>
+                  <span class="setting-desc">Balance between factual precision and creative synthesis</span>
+                </div>
+                <div class="setting-control slider-control-group">
+                  <input type="range" class="setting-slider" id="setting-temp-slider" min="0.0" max="1.0" step="0.05" value="0.7">
+                  <span class="slider-val-badge" id="temp-val-display">0.70</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: VOICE & AUDIO -->
+          <div class="modal-tab-content" id="tab-content-voice">
+            <div class="settings-section">
+              <div class="settings-section-title">Speech Synthesis (TTS)</div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">Default Voice Persona</span>
+                  <span class="setting-desc">Persona used for audio readouts</span>
+                </div>
+                <div class="setting-control">
+                  <select id="setting-voice-select">
+                    <option value="alloy">Alloy (Balanced)</option>
+                    <option value="echo">Echo (Warm)</option>
+                    <option value="fable">Fable (Expressive)</option>
+                    <option value="onyx">Onyx (Deep)</option>
+                    <option value="nova">Nova (Energetic)</option>
+                    <option value="shimmer">Shimmer (Clear)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">Speech Rate Speed</span>
+                  <span class="setting-desc">Adjust playback speed multiplier</span>
+                </div>
+                <div class="setting-control slider-control-group">
+                  <input type="range" class="setting-slider" id="setting-speed-slider" min="0.5" max="2.0" step="0.1" value="1.0">
+                  <span class="slider-val-badge" id="speed-val-display">1.0x</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 4: CLOUD GATEWAY -->
+          <div class="modal-tab-content" id="tab-content-cloud">
+            <div class="settings-section">
+              <div class="settings-section-title">Remote Infrastructure</div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">FastAPI Cloud Host</span>
+                  <span class="setting-desc">Production remote backend server on Render</span>
+                </div>
+                <div class="setting-control">
+                  <span style="font-size: 11px; color: #10b981; font-weight: 600;">● Online (navii-backend.onrender.com)</span>
+                </div>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">Latency Status</span>
+                  <span class="setting-desc">Gateway roundtrip response time</span>
+                </div>
+                <div class="setting-control">
+                  <span style="font-size: 11px; color: var(--accent-cyan); font-weight: 600;">24 ms</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-secondary" id="cancel-settings-btn" onclick="document.getElementById('settings-modal').classList.remove('active')">Cancel</button>
+          <button class="btn-primary" id="save-settings-btn">Save Changes</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 2: USER PROFILE / AUTH MODAL -->
+    <div class="modal-backdrop" id="profile-modal">
+      <div class="modal-window" style="max-width: 440px;">
+        <div class="modal-header">
+          <div class="modal-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span>Operator Identity & Gateway</span>
+          </div>
+          <button class="modal-close-btn" id="close-profile-modal">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <!-- VIEW 1: LOGGED OUT (GOOGLE AUTH & EMAIL/PASSWORD) -->
+        <div class="modal-body" id="auth-view-logged-out">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Sign In to N.A.V.I.I Cloud</div>
+            <div style="font-size: 12px; color: var(--text-secondary);">Authenticate with Google or email credentials</div>
+          </div>
+
+          <!-- Google Sign-In Button -->
+          <button class="btn-google-auth" id="btn-google-signin">
+            <svg width="18" height="18" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            <span>Continue with Google</span>
+          </button>
+
+          <div class="auth-divider">
+            <span>OR</span>
+          </div>
+
+          <!-- Email / Password Form -->
+          <div class="auth-tabs" style="display: flex; gap: 8px; margin-bottom: 14px;">
+            <button class="modal-tab-btn active" id="tab-auth-login" style="flex: 1; text-align: center;">Sign In</button>
+            <button class="modal-tab-btn" id="tab-auth-register" style="flex: 1; text-align: center;">Create Account</button>
+          </div>
+
+          <div id="auth-register-name-row" style="display: none; margin-bottom: 10px;">
+            <input type="text" class="search-input" id="auth-fullname" placeholder="Full Name (Operator Name)" style="font-size: 13px; padding: 10px 12px; width: 100%;">
+          </div>
+          <div style="margin-bottom: 10px;">
+            <input type="email" class="search-input" id="auth-email" placeholder="Gmail or Email Address" style="font-size: 13px; padding: 10px 12px; width: 100%;">
+          </div>
+          <div style="margin-bottom: 14px;">
+            <input type="password" class="search-input" id="auth-password" placeholder="Password (minimum 6 characters)" style="font-size: 13px; padding: 10px 12px; width: 100%;">
+          </div>
+
+          <div id="auth-error-msg" style="display: none; color: #f87171; font-size: 12px; margin-bottom: 12px; background: rgba(239, 68, 68, 0.1); padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid rgba(239, 68, 68, 0.3);"></div>
+
+          <button class="btn-primary" id="btn-auth-submit" style="width: 100%; justify-content: center; padding: 10px 16px;">
+            Sign In with Email
+          </button>
+        </div>
+
+        <!-- VIEW 2: LOGGED IN (USER PROFILE) -->
+        <div class="modal-body" id="auth-view-logged-in" style="display: none;">
+          <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px; padding: 12px; background: rgba(255, 255, 255, 0.03); border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+            <div id="auth-profile-avatar" style="width: 48px; height: 48px; border-radius: 50%; background: var(--accent-gradient); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; color: #fff;">
+              OP
+            </div>
+            <div>
+              <div id="auth-profile-name" style="font-size: 15px; font-weight: 700; color: var(--text-primary);">Operator</div>
+              <div id="auth-profile-email" style="font-size: 12px; color: var(--text-secondary);">operator@navii.ai</div>
+              <div style="margin-top: 4px;"><span class="quota-badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">● Firebase Cloud Active</span></div>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Identity Provider</span>
+              <span class="setting-desc">Google OAuth 2.0 / Firebase Security Gateway</span>
+            </div>
+            <span class="model-badge">Verified</span>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Subscription Tier</span>
+              <span class="setting-desc">100% Free Production MVP (Five Free OpenRouter Models)</span>
+            </div>
+            <span class="file-status-badge">● Free Tier</span>
+          </div>
+
+          <button class="header-action-btn" id="btn-auth-logout" style="width: 100%; justify-content: center; margin-top: 16px; border-color: rgba(239, 68, 68, 0.4); color: #f87171;">
+            Sign Out
+          </button>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-secondary" onclick="document.getElementById('profile-modal').classList.remove('active')">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 3: RENAME CONVERSATION MODAL -->
+    <div class="modal-backdrop" id="rename-modal">
+      <div class="modal-window" style="max-width: 440px;">
+        <div class="modal-header">
+          <div class="modal-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+            <span>Rename Session</span>
+          </div>
+          <button class="modal-close-btn" id="close-rename-modal">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="search-input" id="rename-input" placeholder="Enter session title..." style="font-size: 14px; padding: 10px 14px;">
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" onclick="document.getElementById('rename-modal').classList.remove('active')">Cancel</button>
+          <button class="btn-primary" id="btn-confirm-rename">Save Title</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toast-container"></div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="js/sound.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/workspaces.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/chat.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

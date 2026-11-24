@@ -1,0 +1,24 @@
+{
+  "name": "navii-desktop",
+  "version": "1.0.0",
+  "description": "N.A.V.I.I - Neural Assistant for Virtual Intelligence & Interaction",
+  "main": "main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "electron test/verify-ui.js"
+  },
+  "keywords": [
+    "ai",
+    "assistant",
+    "desktop",
+    "electron",
+    "neural",
+    "fastapi",
+    "supabase"
+  ],
+  "author": "Google Deepmind / N.A.V.I.I Team",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "electron": "^30.0.9"
+  }
+}

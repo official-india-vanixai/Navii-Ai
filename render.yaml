@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: navii-backend
+    runtime: python
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: OPENROUTER_BASE_URL
+        value: https://openrouter.ai/api/v1
+      - key: OPENROUTER_DEFAULT_MODEL
+        value: google/gemma-4-26b-a4b-it:free
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: FIREBASE_PROJECT_ID
+        value: naviixai-uk14
+      - key: FIREBASE_API_KEY
+        value: AIzaSyDOrR5nlw3dW47_ErRzDczJCNkundwr3w4
+      - key: FIREBASE_AUTH_DOMAIN
+        value: naviixai-uk14.firebaseapp.com
+      - key: FIREBASE_APP_ID
+        value: 1:241439983629:web:9927e7900a691671cfed44
+      - key: GOOGLE_CLIENT_SECRET
+        value: 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

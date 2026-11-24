@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "details": {
+    "title": "N.A.V.I.I - Neural Assistant for Virtual Intelligence & Interaction",
+    "appInfo": {
+      "name": "N.A.V.I.I",
+      "fullName": "Neural Assistant for Virtual Intelligence & Interaction",
+      "version": "30.5.1",
+      "platform": "win32"
+    },
+    "isMaximized": false,
+    "telemetrySuccess": true,
+    "shellExecutionBlocked": true,
+    "prefsRoundtrip": true,
+    "notifTriggered": true,
+    "capabilitiesCount": 5,
+    "multiModelUI": {
+      "hasModelSelector": true,
+      "hasModelTrigger": true,
+      "modelOptionCount": 7,
+      "hasFreeModelsInSetting": true,
+      "settingOptionCount": 7
+    },
+    "authUI": {
+      "hasGoogleAuthBtn": true,
+      "hasAuthModal": true,
+      "hasEmailInput": true,
+      "hasPasswordInput": true,
+      "hasNaviiAuth": true
+    },
+    "hasApiMethods": {
+      "openFileDialog": true,
+      "showNotification": true,
+      "getPreferences": true,
+      "executeAutomation": true,
+      "onMaximizedChange": true
+    }
+  },
+  "timestamp": "2026-11-24T16:06:19.350Z"
+}
